@@ -1,0 +1,2 @@
+class ClientUpdateInput {}
+export { ClientUpdateInput };
