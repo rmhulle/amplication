@@ -1,0 +1,68 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  createdAt DateTime @default(now())
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     String[]
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Form {
+  body        String?
+  client      Client?          @relation(fields: [clientId])
+  clientId    String?
+  createdAt   DateTime         @default(now())
+  display     EnumFormDisplay?
+  id          String           @id @default(cuid())
+  submissions Submission[]
+  updatedAt   DateTime         @updatedAt
+}
+
+model Submission {
+  anonId    String?
+  createdAt DateTime @default(now())
+  data      String?
+  form      Form?    @relation(fields: [formId])
+  formId    String?
+  id        String   @id @default(cuid())
+  lead      Lead?    @relation(fields: [leadId])
+  leadId    String?
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  createdAt DateTime @default(now())
+  forms     Form[]
+  id        String   @id @default(cuid())
+  leads     Lead[]
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  anonId      String?
+  client      Client?      @relation(fields: [clientId])
+  clientId    String?
+  createdAt   DateTime     @default(now())
+  email       String?
+  id          String       @id @default(cuid())
+  name        String?
+  phone       String?
+  submissions Submission[]
+  updatedAt   DateTime     @updatedAt
+}
+
+enum EnumFormDisplay {
+  form
+  wizard
+}

@@ -1,0 +1,2 @@
+class ClientCreateInput {}
+export { ClientCreateInput };
